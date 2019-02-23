@@ -1,6 +1,7 @@
 using Distributed
 # this is personalized for Arthur York's OSU server space to use the development PorousMaterials
-@everywhere push!(LOAD_PATH, "/nfs/stak/users/yorkar/git_files/PorousMaterials.jl/src")
+# This line can be uncommented and adjusted to use a development PorousMaterials, otherwise it will use the standard.
+# @everywhere push!(LOAD_PATH, "/nfs/stak/users/yorkar/git_files/PorousMaterials.jl/src")
 @everywhere using PorousMaterials
 using CSV
 using DataFrames
