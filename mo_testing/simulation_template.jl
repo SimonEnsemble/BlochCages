@@ -18,12 +18,12 @@ ljforcefield = LJForceField(ARGS[2])
 molecule = Molecule(ARGS[3])
 
 # fugacities will not be modified in these simulations because it runs the same range for all structures
-# the fugacities will be twenty pressures from 10^-2 to 65 using a log10 scale
+# the pressures will be twenty pressures from 10^-2 to 65 using a log10 scale
 
-fugacities = 10 .^ range(-2, stop=log10(65), length=20)
+pressures = 10 .^ range(-2, stop=log10(65), length=20)
 
-results = adsorption_isotherm(structure, molecule, 298.0, fugacities, ljforcefield,
-    n_burn_cycles=10000, n_sample_cycles=10000, verbose=true, show_progress_bar=false,
+results = adsorption_isotherm(structure, molecule, 298.0, pressures, ljforcefield,
+    n_burn_cycles=100000, n_sample_cycles=100000, verbose=true, show_progress_bar=false,
     eos=:PengRobinson)
 
 output_file = ARGS[4] * ".jld2"
