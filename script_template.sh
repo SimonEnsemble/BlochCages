@@ -5,11 +5,11 @@
 #$ -cwd
 
 # name this job
-#$ -N cobdp_expanded
+#$ -N <NAME_OF_JOB>
 
 # send stdout and stderror to this file
-#$ -o cobdp_expanded.o
-#$ -e cobdp_expanded.e
+#$ -o <NAME_OF_JOB>.o
+#$ -e <NAME_OF_JOB>.e
 #$ -j y
 
 #the list of users who will recieve mail about this job
@@ -22,7 +22,7 @@
 #$ -q mime5
 
 #set up a parallel environment
-#$ -pe openmpi 15
+#$ -pe openmpi 4
 
 # print date and time
 date
