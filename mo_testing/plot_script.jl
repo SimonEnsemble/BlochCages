@@ -14,7 +14,7 @@ input_file = ARGS[1]
 
 @load input_file results density
 mmolg = [results[i]["⟨N⟩ (mmol/g)"] for i = 1:length(results)]
-vstpv = mmolg .* (22.4 * density / 2000)
+vstpv = mmolg .* (22.4 * density / 1000)
 pressures = [results[i]["fugacity (bar)"] for i = 1:length(results)]
 
 df = CSV.File(ARGS[2]) |> DataFrame
