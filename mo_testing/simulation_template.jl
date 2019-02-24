@@ -17,6 +17,8 @@ strip_numbers_from_atom_labels!(structure)
 ljforcefield = LJForceField(ARGS[2])
 molecule = Molecule(ARGS[3])
 
+density = crystal_density(structure)
+
 # fugacities will not be modified in these simulations because it runs the same range for all structures
 # the pressures will be twenty pressures from 10^-2 to 65 using a log10 scale
 
@@ -28,4 +30,4 @@ results = adsorption_isotherm(structure, molecule, 298.0, pressures, ljforcefiel
 
 output_file = ARGS[4] * ".jld2"
 
-@save output_file results
+@save output_file results density

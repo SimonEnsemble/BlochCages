@@ -9,16 +9,19 @@ using PyPlot
 # Pass the jld2 file as the first CLA
 input_file = ARGS[1]
 
-@load input_file results
+@load input_file results density
 
 mmolg = [results[i]["⟨N⟩ (mmol/g)"] for i = 1:length(results)]
+
+vstpv = mmolg .* (22.4 * density / 1000)
+
 pressures = [results[i]["fugacity (bar)"] for i = 1:length(results)]
 
 grid(true, linestyle="--", zorder=0) # the grid will be present
 #set_axisbelow(true)
-scatter(pressures, mmolg, label=ARGS[2], color=:blue, marker="o", zorder=1000) # line is labelled based on structure name
+scatter(pressures, vstpv, label=ARGS[2], color=:blue, marker="o", zorder=1000) # line is labelled based on structure name
 xlabel("Pressure (bar)")
-ylabel(L"$\langle$N$\rangle$ (mmol/g)") 
+ylabel(L"Methane Adsorbed (cm$^3$/cm$^3$)") 
 title("Adsorption Isotherm for " * ARGS[2]) # plot is labelled based on structure name
 legend(loc=4) # legend will display in the lower right
 
