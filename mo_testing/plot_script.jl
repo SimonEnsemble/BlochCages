@@ -14,6 +14,11 @@ input_file = ARGS[1]
 
 @load input_file results density
 mmolg = [results[i]["⟨N⟩ (mmol/g)"] for i = 1:length(results)]
+
+# Converted mmol/g -> cm^3 STP/cm^3
+# (mmol) * (22.4 L STP) * (density kg) * (1000 g) * (  m^3 ) = (22.4 * density) (L STP)
+# ( g  )   (1000 mmol )   (   m^3    )   (  kg  )   (1000 L)   (     1000     ) (  L  )
+
 vstpv = mmolg .* (22.4 * density / 1000)
 pressures = [results[i]["pressure (bar)"] for i = 1:length(results)]
 
