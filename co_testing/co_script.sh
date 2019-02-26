@@ -5,11 +5,11 @@
 #$ -cwd
 
 # name this job
-#$ -N mo_testing
+#$ -N co_testing
 
 # send stdout and stderror to this file
-#$ -o mo_testing.o
-#$ -e mo_testing.e
+#$ -o co_testing.o
+#$ -e co_testing.e
 #$ -j y
 
 #the list of users who will recieve mail about this job
