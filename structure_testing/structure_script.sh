@@ -5,11 +5,11 @@
 #$ -cwd
 
 # name this job
-#$ -N co_testing
+#$ -N mo_co_testing
 
 # send stdout and stderror to this file
-#$ -o co_testing.o
-#$ -e co_testing.e
+#$ -o mo_co_testing.o
+#$ -e mo_co_testing.e
 #$ -j y
 
 #the list of users who will recieve mail about this job
@@ -28,4 +28,4 @@
 date
 
 # This will use 4 cores, to use more, change the `-p` flag
-julia -p 4 simulation_template.jl Co24_P1.cif UFF.csv CH4 co_output
+julia -p 4 simulation_template.jl
