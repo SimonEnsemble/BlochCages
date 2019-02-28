@@ -5,11 +5,11 @@
 #$ -cwd
 
 # name this job
-#$ -N n2_simulation
+#$ -N n2_sim_100K
 
 # send stdout and stderror to this file
-#$ -o n2_simulation.o
-#$ -e n2_simulation.e
+#$ -o n2_sim_100K.o
+#$ -e n2_sim_100K.e
 #$ -j y
 
 #the list of users who will recieve mail about this job
