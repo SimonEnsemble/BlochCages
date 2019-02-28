@@ -4,13 +4,13 @@ using DataFrames
 using PyPlot
 
 # Pass in the following command line arguments for this plotting script to work
-# 1. the name of the .jld2 file to open for plotting
+# 1. the name of the .jld2 file to open for plotting as well as the name for the png
 # 2. the name of the csv experimental data
 # 3. the name of the structure being used
 # 4. the name of the .png file the plot will be saved as
 
 # Pass the jld2 file as the first CLA
-input_file = ARGS[1]
+input_file = ARGS[1] * ".jld2"
 
 @load input_file results density
 mmolg = [results[i]["⟨N⟩ (mmol/g)"] for i = 1:length(results)]
@@ -34,4 +34,4 @@ title("Adsorption Isotherm for " * ARGS[3]) # plot is labelled based on structur
 legend(loc=4) # legend will display in the lower right
 
 # Pass the output file as the second CLA
-savefig(ARGS[4], dpi=300)
+savefig(ARGS[1] * ".png", dpi=300)
