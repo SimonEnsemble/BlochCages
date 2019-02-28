@@ -28,4 +28,4 @@
 date
 
 # This will use 4 cores, to use more, change the `-p` flag
-julia -p 4 simulation_template.jl
+julia -p 4 mo_co_uff_dreiding.jl
