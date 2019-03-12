@@ -26,10 +26,10 @@ df = CSV.File(ARGS[2]) |> DataFrame
 
 grid(true, linestyle="--", zorder=0) # the grid will be present
 #set_axisbelow(true)
-plot(pressures, vstpg, label="Simulated " * ARGS[3], color=:blue, marker="o", zorder=1000) # simulated data
-scatter(df[1], df[2], label="Experimental " * ARGS[3], color=:orange, marker="^", zorder=1000)
+plot(pressures, vstpg, label="Simulation " * ARGS[3] * " (298K)", color=:blue, marker="o", zorder=1000) # simulated data
+scatter(df[Symbol("P(bar)")], df[Symbol("cm3/g")], label="Experimental " * ARGS[3] * " (298K)", color=:orange, marker="^", zorder=1000)
 xlabel("Pressure (bar)")
-ylabel(L"Methane Adsorbed (cm$^3$/g)") 
+ylabel(L"Methane Adsorbed (cm$^3$ STP/g)") 
 title("Adsorption Isotherm for " * ARGS[3]) # plot is labelled based on structure name
 legend(loc=4) # legend will display in the lower right
 
