@@ -54,11 +54,11 @@ for input_file in data_files
 
     grid(true, linestyle="--", zorder=0) # the grid will be present
     #set_axisbelow(true)
-    plot(pressures, cm3stpcm3, label="Simulation (298 K)", color=simulated_color, marker="o", zorder=1000) # simulated data
-    scatter(exp_data_df[Symbol("P(bar)")], exp_data_df[Symbol("cm3/cm3")], label="Experiment (298 K)", color=exp_color, marker="^", zorder=1000)
+    plot(pressures, cm3stpcm3, label="Simulation (298 K)", color=simulated_color, marker="o", zorder=1000, clip_on=false) # simulated data
+    scatter(exp_data_df[Symbol("P(bar)")], exp_data_df[Symbol("cm3/cm3")], label="Experiment (298 K)", color=exp_color, marker="^", zorder=1000, clip_on=false)
     xlabel("Pressure (bar)")
     ylabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)") 
-    ylim([0, 350])
+    ylim([0, 250])
     xlim([0, 70])
     title("Adsorption Isotherm for " * latex_structure_name) # plot is labelled based on structure name
     legend(loc=4) # legend will display in the lower right
@@ -75,7 +75,7 @@ for input_file in data_files
     qst_kjmol = qst_k * 8.314 / 1000
 
     grid(true, linestyle="--", zorder=0) # the grid will be present
-    plot(cm3stpcm3, qst_kjmol, label="Simulated (298 K)", color=simulated_color, marker="o", zorder=1000)
+    plot(cm3stpcm3, qst_kjmol, label="Simulated (298 K)", color=simulated_color, marker="o", zorder=1000, clip_on=false)
     xlabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)")
     ylabel(L"Q$_{st}$ kJ/mol")
     ylim([0, 17])
