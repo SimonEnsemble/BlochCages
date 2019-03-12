@@ -13,6 +13,9 @@ using Printf
 for input_file in ARGS
     # Pass the jld2 file as the first CLA
     @load input_file results density
+
+    @assert(results[1]["forcefield"] == "Dreiding_UFF_for_Co_and_Mo.csv")
+    
     mmolg = [results[i]["⟨N⟩ (mmol/g)"] for i = 1:length(results)]
 
     # Converted mmol/g -> cm^3 STP/cm^3
