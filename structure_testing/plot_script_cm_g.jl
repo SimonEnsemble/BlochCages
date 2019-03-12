@@ -4,26 +4,29 @@ using DataFrames
 using PyPlot
 using Printf
 
-# Pass in the following command line arguments for this plotting script to work
-# 1. the name of the .jld2 file to open for plotting
-# 2. the name of the csv experimental data
-# 3. the name of the structure being used
-# 4. the name of the .png file the plot will be saved as
+data_files = ["Co24_P1_cleaned_missingCo_added_Dreiding_100K.jld2", "Mo24_P1_Dreiding_100K.jld2"]
 
-for input_file in ARGS
+for input_file in data_files
     # Pass the jld2 file as the first CLA
     @load input_file results density
 
     @assert(results[1]["forcefield"] == "Dreiding_UFF_for_Co_and_Mo.csv")
+    @assert(results[1]["adsorbate"] == :CH4)
     
     mmolg = [results[i]["⟨N⟩ (mmol/g)"] for i = 1:length(results)]
 
-    # Converted mmol/g -> cm^3 STP/cm^3
+    # Converted mmol/g -> cm^3 STP/g
     # (mmol) * (22.4 L STP) * (1000 cm^3) = (22.4) (cm^3 STP)
     # ( g  )   (1000 mmol )   (    L    )          (    g   )
 
-    vstpg = mmolg .* (22.4)
+    cm3stpg = mmolg * 22.4
     pressures = [results[i]["pressure (bar)"] for i = 1:length(results)]
+
+    # Converted cm^3/g -> cm^3 STP/cm^3
+    # cm^3 STP  *  ρ kg    *    (m)^3      * 1000g        = ρ cm^3 STP
+    #   g           m^3      (100 cm)^3       kg            1000  cm^3
+
+    cm3stpcm3 = cm3stpg * density / 1000
 
     experimental_data_file = ""
     latex_structure_name = ""
@@ -46,19 +49,41 @@ for input_file in ARGS
     end
 
     exp_data_df = CSV.File(experimental_data_file) |> DataFrame # use standard cmg experimental data file, this won't change
+    exp_data_df[Symbol("cm3/cm3")] = exp_data_df[Symbol("cm3/g")] * density / 1000
+
 
     grid(true, linestyle="--", zorder=0) # the grid will be present
     #set_axisbelow(true)
-    plot(pressures, vstpg, label="Simulation (298K)", color=simulated_color, marker="o", zorder=1000) # simulated data
-    scatter(exp_data_df[Symbol("P(bar)")], exp_data_df[Symbol("cm3/g")], label="Experiment (298K)", color=exp_color, marker="^", zorder=1000)
+    plot(pressures, cm3stpcm3, label="Simulation (298 K)", color=simulated_color, marker="o", zorder=1000) # simulated data
+    scatter(exp_data_df[Symbol("P(bar)")], exp_data_df[Symbol("cm3/cm3")], label="Experiment (298 K)", color=exp_color, marker="^", zorder=1000)
     xlabel("Pressure (bar)")
-    ylabel(L"Methane Adsorbed (cm$^3$ STP/g)") 
+    ylabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)") 
+    ylim([0, 350])
+    xlim([0, 70])
     title("Adsorption Isotherm for " * latex_structure_name) # plot is labelled based on structure name
     legend(loc=4) # legend will display in the lower right
 
     # Pass the output file as the second CLA
-    output_file = split(input_file, ".")[1] * ".png"
-    @printf("Saving figure to: %s\n", output_file)
-    savefig(output_file, dpi=300)
+    output_file_adsorption = split(input_file, ".")[1] * ".png"
+    @printf("Saving figure to: %s\n", output_file_adsorption)
+    savefig(output_file_adsorption, dpi=300)
     clf()
+    
+
+    # plotting the energy of adsorption
+    qst_k = [results[i]["Q_st (K)"] for i = 1:length(results)]
+    qst_kjmol = qst_k * 8.314 / 1000
+
+    grid(true, linestyle="--", zorder=0) # the grid will be present
+    plot(cm3stpcm3, qst_kjmol, label="Simulated (298 K)", color=simulated_color, marker="o", zorder=1000)
+    xlabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)")
+    ylabel(L"Q$_{st}$ kJ/mol")
+    ylim([0, 17])
+    title("Heat of Adsorption for " * latex_structure_name)
+    legend(loc=4) # legend will display in the lower right
+
+    output_file_heat = split(input_file, ".")[1] * "_heat.png"
+    savefig(output_file_heat, dpi=300)
+    clf()
+
 end
