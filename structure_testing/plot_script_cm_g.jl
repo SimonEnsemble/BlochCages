@@ -10,9 +10,7 @@ using Printf
 # 3. the name of the structure being used
 # 4. the name of the .png file the plot will be saved as
 
-structures = ARGS[1:2] # the two jld2 files to use for plotting
-
-for input_file in structures
+for input_file in ARGS
     # Pass the jld2 file as the first CLA
     @load input_file results density
     mmolg = [results[i]["⟨N⟩ (mmol/g)"] for i = 1:length(results)]
@@ -40,7 +38,7 @@ for input_file in structures
         latex_structure_name = L"Mo$_{24}$($^{t}$Bu-bdc)$_{24}$"
         exp_color = "#54B5B5"
     else
-        @printf("No match for structure: %s\n", results[1]["crystal"])
+        @printf("No match or experimental data for structure: %s\n", results[1]["crystal"])
         continue
     end
 
