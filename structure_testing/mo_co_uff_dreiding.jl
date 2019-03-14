@@ -18,7 +18,7 @@ for forcefield_name in forcefield_files
 
         density = crystal_density(structure)
 
-        output_file = split(structure_name, ".")[1] * "_" * split(split(forcefield_name, ".")[1], "_")[1] * "_100K" * ".jld2"
+        output_file = split(structure_name, ".")[1] * "_" * split(split(forcefield_name, ".")[1], "_")[1] * "_100Kcycles" * ".jld2"
 
         # fugacities will not be modified in these simulations because it runs the same range for all structures
         # the pressures will be twenty pressures from 10^-2 to 65 using a log10 scale
