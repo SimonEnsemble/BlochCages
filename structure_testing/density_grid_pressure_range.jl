@@ -21,7 +21,7 @@ for structre_name in structure_files
 
         results = adsorption_isotherm(structure, molecule, 298.0, pressures,
                     ljforcefield, n_burn_cycles=100000, n_sample_cycles=200000,
-                    snapshot_frequency=1, calculate_density_grid=true,
+                    eos=:PengRobinson, snapshot_frequency=1, calculate_density_grid=true,
                     density_grid_dx=0.5, filename_comment="grid_range")
 
         @save output_file results
