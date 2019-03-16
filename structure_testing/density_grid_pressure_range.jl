@@ -7,12 +7,12 @@ using Printf
 structure_files = ["Co24_P1_cleaned_missingCo_added.cif", "Mo24_P1.cif"]
 forcefield_files = ["Dreiding_UFF_for_Co_and_Mo.csv"]
 
-for structre_name in structure_files
+for structure_name in structure_files
     for forcefield_name in forcefield_files
 
         structure = Framework(structure_name)
         strip_numbers_from_atom_labels!(structure)
-        ljforcefield = LJForceField(forcefield_file)
+        ljforcefield = LJForceField(forcefield_name)
         molecule = Molecule("CH4")
 
         output_file = split(structure_name, ".")[1] * "_" * split(split(forcefield_name, ".")[1], "_")[1] * "_200Kcycles_grid_range" * ".jld2"
