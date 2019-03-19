@@ -11,7 +11,7 @@ for metal in ["Co", "Mo"]
     strip_numbers_from_atom_labels!(framework)
 
     write_vtk(framework.box, metal)
-    write_xyz(framework)
+    write_xyz(framework, metal * ".xyz")
 
     n_pts = required_n_pts(framework.box, 0.25)
     grid = energy_grid(framework, molecule, ljff, n_pts=n_pts)
