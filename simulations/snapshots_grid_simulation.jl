@@ -17,7 +17,7 @@ for forcefield_name in forcefield_files
 
         density = crystal_density(structure)
 
-        output_file = split(structure_name, ".")[1] * "_" * split(split(forcefield_name, ".")[1], "_")[1] * "_100K_test_snapshot_changes" * ".jld2"
+        output_file = split(structure_name, ".")[1] * "_" * split(split(forcefield_name, ".")[1], "_")[1] * "_100Kcycles_test_snapshot_changes" * ".jld2"
 
         results = gcmc_simulation(structure, molecule, 298.0, 5.0, ljforcefield,
                     n_burn_cycles=100000, n_sample_cycles=100000, write_adsorbate_snapshots=true,

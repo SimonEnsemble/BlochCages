@@ -4,7 +4,7 @@ using DataFrames
 using PyPlot
 using Printf
 
-data_files = ["Co24_P1_cleaned_missingCo_added_Dreiding_100K.jld2", "Mo24_P1_Dreiding_100K.jld2"]
+data_files = ["Co24_P1_cleaned_missingCo_added_Dreiding_100Kcycles.jld2", "Mo24_P1_Dreiding_100Kcycles.jld2"]
 
 for input_file in data_files
     # Pass the jld2 file as the first CLA
