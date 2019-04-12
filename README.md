@@ -33,3 +33,5 @@ The two crystal structures used for these simulations were:
 │   ├── cleaned                                 # .cif files that have been cleaned and ready to be used in GCMC simulations
 │   └── dirty                                   # original .cif files of the structures to be simulated
 </pre>
+
+The `mo_co_uff_dreiding.jl` produces outputs based on two forcefield files. The output from both are included in this repository. The `Dreiding_UFF_for_Co_and_Mo.csv` produced data closer to the experimental data, so only simulations run with that forcefield were used for making visualizations.
