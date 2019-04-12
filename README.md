@@ -27,9 +27,9 @@ The two crystal structures used for these simulations were:
 │   │                                           #   and heat of adsorption between the simulated data and experimental data
 │   ├── write_grid.jl                           # Julia script for
 │   ├── data                                    # Simulation input files for <a href="https://github.com/SimonEnsemble/PorousMaterials.jl" title="PorousMaterials.jl">PorousMaterials.jl</a>
-│   ├── plots
-│   └── viz
-├── structures
-│   ├──  
-│   └──
+│   ├── plots                                   # Plots created by the plot_script_cm_g.jl file (manually moved here)
+│   └── viz                                     # Find Spatial probability denisty visualizations
+├── structures                                  # structures used for simulations
+│   ├── cleaned                                 # .cif files that have been cleaned and ready to be used in GCMC simulations
+│   └── dirty                                   # original .cif files of the structures to be simulated
 </pre>
