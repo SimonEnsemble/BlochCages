@@ -1,6 +1,8 @@
 # BlochCages
 
-The `script_template.sh` and `simulation_template.jl` can be copied into testing folders to run computations on the hpc. The `simulation_template.jl` file is modular and is run by using command line arguments, so to modifiy these files for different testing edit the `script_template.sh` by replacing `<VARIABLE>` with the correct file name.
+The two crystal structures used for these simulations were:
+
+- `./simulations/data/crystals/Co24_P1_cleaned_missingCo_added.cif` for Co$_{24}$(Mebdc)$_{24}$(dabco)$_{6}$
 
 # Structure of repository
 ```
