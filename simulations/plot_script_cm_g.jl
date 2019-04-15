@@ -23,8 +23,8 @@ for input_file in data_files
     pressures = [results[i]["pressure (bar)"] for i = 1:length(results)]
 
     # Converted cm^3/g -> cm^3 STP/cm^3
-    # cm^3 STP  *  ρ kg    *    (m)^3      * 1000g        = ρ cm^3 STP
-    #   g           m^3      (100 cm)^3       kg            1000  cm^3
+    # (cm^3 STP) * (ρ kg) * (   (m)^3  ) * (1000g) = (ρ cm^3 STP)
+    # (   g    )   ( m^3)   ((100 cm)^3)   (  kg )   (1000  cm^3)
 
     cm3stpcm3 = cm3stpg * density / 1000
 
