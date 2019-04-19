@@ -28,19 +28,22 @@ for input_file in data_files
 
     cm3stpcm3 = cm3stpg * density / 1000
 
-    experimental_data_file = ""
+    experimental_data_file_cmg = ""
+    experimental_data_file_qst = ""
     latex_structure_name = ""
     simulated_color = :orange
     exp_color = ""
     @printf("Crystal: %s\n", results[1]["crystal"])
     if split(results[1]["crystal"], "_")[1] == "Co24"
         @printf("Found: Co24 using: %s\n", input_file)
-        experimental_data_file = "co_exp_data_cmg.csv"
+        experimental_data_file_cmg = "co_exp_data_cmg.csv"
+        experimental_data_file_qst = "co_exp_data_qst.csv"
         latex_structure_name = L"Co$_{24}$(Mebdc)$_{24}$(dabco)$_{6}$"
         exp_color = "#F090A0"
     elseif split(results[1]["crystal"], "_")[1] == "Mo24"
         @printf("Found: Mo24 using: %s\n", input_file)
-        experimental_data_file = "mo_exp_data_cmg.csv"
+        experimental_data_file_cmg = "mo_exp_data_cmg.csv"
+        experimental_data_file_qst = "co_exp_data_qst.csv"
         latex_structure_name = L"Mo$_{24}$($^{t}$Bu-bdc)$_{24}$"
         exp_color = "#54B5B5"
     else
@@ -48,8 +51,11 @@ for input_file in data_files
         continue
     end
 
-    exp_data_df = CSV.File(experimental_data_file) |> DataFrame # use standard cmg experimental data file, this won't change
+    exp_data_df = CSV.File(experimental_data_file_cmg) |> DataFrame # use standard cmg experimental data file, this won't change
     exp_data_df[Symbol("cm3/cm3")] = exp_data_df[Symbol("cm3/g")] * density / 1000
+
+    heat_data_df = CSV.File(experimental_data_file_qst) |> DataFrame # use the heat data .csv file
+    heat_data_df[Symbol("cm3/cm3")] = heat_data_df[Symbol("(mmol/g)")] * 22.4 * density / 1000 # using unit conversions defined above
 
 
     grid(true, linestyle="--", zorder=0) # the grid will be present
@@ -75,7 +81,8 @@ for input_file in data_files
     qst_kjmol = qst_k * 8.314 / 1000
 
     grid(true, linestyle="--", zorder=0) # the grid will be present
-    plot(cm3stpcm3, qst_kjmol, label="Simulated (298 K)", color=simulated_color, marker="o", zorder=1000, clip_on=false)
+    plot(cm3stpcm3, qst_kjmol, label="Simulation (298 K)", color=simulated_color, marker="o", zorder=1000, clip_on=false)
+    scatter(heat_data_df[Symbol("cm3/cm3")], heat_data_df[Symbol("Qst(kJ/mol)")], label="Experiment (298K)", color=exp_color, marker="^", zorder=1000, clip_on=false)
     xlabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)")
     ylabel(L"Q$_{st}$ kJ/mol")
     ylim([0, 17])
