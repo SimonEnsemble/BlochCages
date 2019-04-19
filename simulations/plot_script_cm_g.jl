@@ -4,6 +4,9 @@ using DataFrames
 using PyPlot
 using Printf
 
+plot_cmg = true
+plot_heat = true
+
 data_files = ["Co24_P1_cleaned_missingCo_added_Dreiding_100Kcycles.jld2", "Mo24_P1_Dreiding_100Kcycles.jld2"]
 
 for input_file in data_files
@@ -51,46 +54,56 @@ for input_file in data_files
         continue
     end
 
-    exp_data_df = CSV.File(experimental_data_file_cmg) |> DataFrame # use standard cmg experimental data file, this won't change
-    exp_data_df[Symbol("cm3/cm3")] = exp_data_df[Symbol("cm3/g")] * density / 1000
+    if plot_cmg
+        exp_data_df = CSV.File(experimental_data_file_cmg) |> DataFrame # use standard cmg experimental data file, this won't change
+        exp_data_df[Symbol("cm3/cm3")] = exp_data_df[Symbol("cm3/g")] * density / 1000
 
-    heat_data_df = CSV.File(experimental_data_file_qst) |> DataFrame # use the heat data .csv file
-    heat_data_df[Symbol("cm3/cm3")] = heat_data_df[Symbol("(mmol/g)")] * 22.4 * density / 1000 # using unit conversions defined above
+        grid(true, linestyle="--", zorder=0) # the grid will be present
+        #set_axisbelow(true)
+        plot(pressures, cm3stpcm3, label="Simulation (298 K)", color=simulated_color, marker="o", zorder=1000, clip_on=false) # simulated data
+        scatter(exp_data_df[Symbol("P(bar)")], exp_data_df[Symbol("cm3/cm3")], label="Experiment (298 K)", color=exp_color, marker="^", zorder=1000, clip_on=false)
+        xlabel("Pressure (bar)")
+        ylabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)") 
+        ylim([0, 250])
+        xlim([0, 70])
+        title("Adsorption Isotherm for " * latex_structure_name) # plot is labelled based on structure name
+        legend(loc=4) # legend will display in the lower right
 
+        output_file_adsorption = joinpath(pwd(), "plots", split(input_file, ".")[1] * ".png")
+        @printf("Saving figure to: %s\n", output_file_adsorption)
+        savefig(output_file_adsorption, dpi=300)
+        clf()
+    end
+  
+    if plot_heat
+        heat_data_df = CSV.File(experimental_data_file_qst) |> DataFrame # use the heat data .csv file
+        heat_data_df[Symbol("cm3/cm3")] = heat_data_df[Symbol("(mmol/g)")] * 22.4 * density / 1000 # using unit conversions defined above
 
-    grid(true, linestyle="--", zorder=0) # the grid will be present
-    #set_axisbelow(true)
-    plot(pressures, cm3stpcm3, label="Simulation (298 K)", color=simulated_color, marker="o", zorder=1000, clip_on=false) # simulated data
-    scatter(exp_data_df[Symbol("P(bar)")], exp_data_df[Symbol("cm3/cm3")], label="Experiment (298 K)", color=exp_color, marker="^", zorder=1000, clip_on=false)
-    xlabel("Pressure (bar)")
-    ylabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)") 
-    ylim([0, 250])
-    xlim([0, 70])
-    title("Adsorption Isotherm for " * latex_structure_name) # plot is labelled based on structure name
-    legend(loc=4) # legend will display in the lower right
+        # plotting the energy of adsorption
+        qst_k = [results[i]["Q_st (K)"] for i = 1:length(results)]
+        qst_kjmol = qst_k * 8.314 / 1000
 
-    # Pass the output file as the second CLA
-    output_file_adsorption = split(input_file, ".")[1] * ".png"
-    @printf("Saving figure to: %s\n", output_file_adsorption)
-    savefig(output_file_adsorption, dpi=300)
-    clf()
-    
+        last_index = 1;
 
-    # plotting the energy of adsorption
-    qst_k = [results[i]["Q_st (K)"] for i = 1:length(results)]
-    qst_kjmol = qst_k * 8.314 / 1000
+        while cm3stpcm3[last_index] < heat_data_df[Symbol("cm3/cm3")][end]
+            last_index += 1
+        end
 
-    grid(true, linestyle="--", zorder=0) # the grid will be present
-    plot(cm3stpcm3, qst_kjmol, label="Simulation (298 K)", color=simulated_color, marker="o", zorder=1000, clip_on=false)
-    scatter(heat_data_df[Symbol("cm3/cm3")], heat_data_df[Symbol("Qst(kJ/mol)")], label="Experiment (298K)", color=exp_color, marker="^", zorder=1000, clip_on=false)
-    xlabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)")
-    ylabel(L"Q$_{st}$ kJ/mol")
-    ylim([0, 17])
-    title("Heat of Adsorption for " * latex_structure_name)
-    legend(loc=4) # legend will display in the lower right
+        cm3stpcm3_short = cm3stpcm3[1:last_index]
+        qst_kjmol_short = qst_kjmol[1:last_index]
 
-    output_file_heat = split(input_file, ".")[1] * "_heat.png"
-    savefig(output_file_heat, dpi=300)
-    clf()
+        grid(true, linestyle="--", zorder=0) # the grid will be present
+        plot(cm3stpcm3_short, qst_kjmol_short, label="Simulation (298 K)", color=simulated_color, marker="o", zorder=1000, clip_on=false)
+        scatter(heat_data_df[Symbol("cm3/cm3")], heat_data_df[Symbol("Qst(kJ/mol)")], label="Experiment (298K)", color=exp_color, marker="^", zorder=1000, clip_on=false)
+        xlabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)")
+        ylabel(L"Q$_{st}$ kJ/mol")
+        ylim([0, 17])
+        title("Heat of Adsorption for " * latex_structure_name)
+        legend(loc=4) # legend will display in the lower right
+
+        output_file_heat = joinpath(pwd(), "plots", split(input_file, ".")[1] * "_heat.png")
+        savefig(output_file_heat, dpi=300)
+        clf()
+    end
 
 end
