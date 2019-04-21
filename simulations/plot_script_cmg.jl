@@ -64,7 +64,7 @@ for input_file in data_files
 
     grid(true, linestyle="--", zorder=0) # the grid will be present
     #set_axisbelow(true)
-    plot(pressures, cm3stpcm3, label=latex_structure_name * " Simulation (298 K)", color=simulated_color, marker=marker, zorder=1000, clip_on=false) # simulated data
+    plot(pressures, cm3stpcm3, label=latex_structure_name * " Simulation (298 K)", color=simulated_color, marker=marker, mfc="none", zorder=1000, clip_on=false) # simulated data
     scatter(exp_data_df[Symbol("P(bar)")], exp_data_df[Symbol("cm3/cm3")], label=latex_structure_name * " Experiment (298 K)", color=exp_color, marker=marker, zorder=1000, clip_on=false)
     if plot_cmg
         xlabel("Pressure (bar)")
