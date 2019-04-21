@@ -4,8 +4,11 @@ using DataFrames
 using PyPlot
 using Printf
 
-plot_cmg = true
+plot_cmg = false
 overlap_cmg = !plot_cmg
+
+co_latex_name = L"Co$_{24}$(Mebdc)$_{24}$(dabco)$_{6}$"
+mo_latex_name = L"Mo$_{24}$($^{t}$Bu-bdc)$_{24}$"
 
 data_files = ["Co24_P1_cleaned_missingCo_added_Dreiding_100Kcycles.jld2", "Mo24_P1_Dreiding_100Kcycles.jld2"]
 
@@ -31,37 +34,39 @@ for input_file in data_files
 
     cm3stpcm3 = cm3stpg * density / 1000
 
-    experimental_data_file_cmg = ""
-    experimental_data_file_qst = ""
-    latex_structure_name = ""
     simulated_color = :orange
-    exp_color = ""
     @printf("Crystal: %s\n", results[1]["crystal"])
     if split(results[1]["crystal"], "_")[1] == "Co24"
         @printf("Found: Co24 using: %s\n", input_file)
         experimental_data_file_cmg = "co_exp_data_cmg.csv"
         experimental_data_file_qst = "co_exp_data_qst.csv"
-        latex_structure_name = L"Co$_{24}$(Mebdc)$_{24}$(dabco)$_{6}$"
+        latex_structure_name = co_latex_name
         exp_color = "#F090A0"
+        marker = "o"
     elseif split(results[1]["crystal"], "_")[1] == "Mo24"
         @printf("Found: Mo24 using: %s\n", input_file)
         experimental_data_file_cmg = "mo_exp_data_cmg.csv"
         experimental_data_file_qst = "mo_exp_data_qst.csv"
-        latex_structure_name = L"Mo$_{24}$($^{t}$Bu-bdc)$_{24}$"
+        latex_structure_name = mo_latex_name
         exp_color = "#54B5B5"
+        marker = "D"
     else
         @printf("No match or experimental data for structure: %s\n", results[1]["crystal"])
         continue
     end
 
-    if plot_cmg
-        exp_data_df = CSV.File(experimental_data_file_cmg) |> DataFrame # use standard cmg experimental data file, this won't change
-        exp_data_df[Symbol("cm3/cm3")] = exp_data_df[Symbol("cm3/g")] * density / 1000
+    if overlap_cmg
+        simulated_color = exp_color
+    end
 
-        grid(true, linestyle="--", zorder=0) # the grid will be present
-        #set_axisbelow(true)
-        plot(pressures, cm3stpcm3, label="Simulation (298 K)", color=simulated_color, marker="o", zorder=1000, clip_on=false) # simulated data
-        scatter(exp_data_df[Symbol("P(bar)")], exp_data_df[Symbol("cm3/cm3")], label="Experiment (298 K)", color=exp_color, marker="^", zorder=1000, clip_on=false)
+    exp_data_df = CSV.File(experimental_data_file_cmg) |> DataFrame # use standard cmg experimental data file, this won't change
+    exp_data_df[Symbol("cm3/cm3")] = exp_data_df[Symbol("cm3/g")] * density / 1000
+
+    grid(true, linestyle="--", zorder=0) # the grid will be present
+    #set_axisbelow(true)
+    plot(pressures, cm3stpcm3, label=latex_structure_name * " Simulation (298 K)", color=simulated_color, marker=marker, zorder=1000, clip_on=false) # simulated data
+    scatter(exp_data_df[Symbol("P(bar)")], exp_data_df[Symbol("cm3/cm3")], label=latex_structure_name * " Experiment (298 K)", color=exp_color, marker=marker, zorder=1000, clip_on=false)
+    if plot_cmg
         xlabel("Pressure (bar)")
         ylabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)")
         ylim([0, 250])
@@ -75,35 +80,19 @@ for input_file in data_files
         clf()
     end
 
-    if plot_heat
-        heat_data_df = CSV.File(experimental_data_file_qst) |> DataFrame # use the heat data .csv file
-        heat_data_df[Symbol("cm3/cm3")] = heat_data_df[Symbol("(mmol/g)")] * 22.4 * density / 1000 # using unit conversions defined above
+end
 
-        # plotting the energy of adsorption
-        qst_k = [results[i]["Q_st (K)"] for i = 1:length(results)]
-        qst_kjmol = qst_k * 8.314 / 1000
+if overlap_cmg
+    xlabel("Pressure (bar)")
+    ylabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)")
+    ylim([0, 250])
+    xlim([0, 70])
+    title("Adsorption Isotherm for " * co_latex_name * " and " * mo_latex_name) # plot is labelled based on structure name
+    legend(loc=4) # legend will display in the lower right
 
-        last_index = 1;
-
-        while cm3stpcm3[last_index] < heat_data_df[Symbol("cm3/cm3")][end]
-            last_index += 1
-        end
-
-        cm3stpcm3_short = cm3stpcm3[1:last_index]
-        qst_kjmol_short = qst_kjmol[1:last_index]
-
-        grid(true, linestyle="--", zorder=0) # the grid will be present
-        plot(cm3stpcm3_short, qst_kjmol_short, label="Simulation (298 K)", color=simulated_color, marker="o", zorder=1000, clip_on=false)
-        scatter(heat_data_df[Symbol("cm3/cm3")], heat_data_df[Symbol("Qst(kJ/mol)")], label="Experiment (298K)", color=exp_color, marker="^", zorder=1000, clip_on=false)
-        xlabel(L"Methane Adsorbed (cm$^3$ STP/cm$^3$)")
-        ylabel(L"Q$_{st}$ (kJ/mol)")
-        ylim([0, 22])
-        title("Heat of Adsorption for " * latex_structure_name)
-        legend(loc=4) # legend will display in the lower right
-
-        output_file_heat = joinpath(pwd(), "plots", split(input_file, ".")[1] * "_heat.png")
-        savefig(output_file_heat, dpi=300)
-        clf()
-    end
-
+    # TODO find a concise, descriptive name for this figure so it is clear where the data is coming from
+    output_file_both = joinpath(pwd(), "plots", "cmg_plot_both_structures.png")
+    @printf("Saving figure to: %s\n", output_file_both)
+    savefig(output_file_both, dpi=300)
+    clf()
 end
