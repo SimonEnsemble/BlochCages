@@ -25,7 +25,7 @@ The two crystal structures used for these simulations were:
 │   │                                           #   &lt;structure_name&gt;_&lt;forcefield_name&gt;_100Kcycles_snapshots_grid.jld2
 │   ├── plot_script_cm_g.jl                     # Julia script that loads in the outputs from the mo_co_uff_dreiding.jl script and makes data visualizations to compare adsorption isotherms
 │   │                                           #   and heat of adsorption between the simulated data and experimental data
-│   ├── write_grid.jl                           # Julia script for
+│   ├── write_grid.jl                           # Julia script to (a) write potential energy grids for zero loading (b) write the spatial probability density grids as `.cube` files for visualization, loading in the results `.jld2` from the GCMC simulation.
 │   ├── data                                    # Simulation input files for <a href="https://github.com/SimonEnsemble/PorousMaterials.jl" title="PorousMaterials.jl">PorousMaterials.jl</a>
 │   ├── plots                                   # Plots created by the plot_script_cm_g.jl file (manually moved here)
 │   └── viz                                     # Find Spatial probability denisty visualizations
