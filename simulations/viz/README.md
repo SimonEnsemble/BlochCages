@@ -11,3 +11,7 @@ lighting on volume plot, NO
 for Co image zoom 1.25
 010 normal
 001 up
+
+Co dept rendinerg
+0 30 0
+0 -5 0
