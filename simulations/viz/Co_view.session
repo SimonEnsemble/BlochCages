@@ -4374,19 +4374,19 @@
         </Object>
         <Object name="ViewerSubject">
             <Object name="SourceMap">
-                <Field name="SOURCE00" type="string">localhost:/home/simoncor/BlochCages/simulations/Co.vtk</Field>
-                <Field name="SOURCE01" type="string">localhost:/home/simoncor/BlochCages/simulations/Co.xyz</Field>
+                <Field name="SOURCE00" type="string">localhost:/home/cokes/BlochCages/simulations/Co.vtk</Field>
+                <Field name="SOURCE01" type="string">localhost:/home/cokes/BlochCages/simulations/Co.xyz</Field>
             </Object>
             <Object name="SourcePlugins">
-                <Field name="localhost:/home/simoncor/BlochCages/simulations/Co.vtk" type="string">VTK_1.0</Field>
-                <Field name="localhost:/home/simoncor/BlochCages/simulations/Co.xyz" type="string">XYZ_1.0</Field>
-                <Field name="localhost:/home/simoncor/BlochCages/simulations/Mo.vtk" type="string">VTK_1.0</Field>
-                <Field name="localhost:/home/simoncor/BlochCages/simulations/Mo.xyz" type="string">XYZ_1.0</Field>
-                <Field name="localhost:/home/simoncor/BlochCages/simulations/data/crystals/Mo_cage_only.xyz" type="string">XYZ_1.0</Field>
-                <Field name="localhost:/home/simoncor/BlochCages/simulations/data/grids/Mo_1.0bar_density_grid.cube" type="string">Cube_1.0</Field>
-                <Field name="localhost:/home/simoncor/BlochCages/simulations/data/grids/Mo_35.0bar_density_grid.cube" type="string">Cube_1.0</Field>
-                <Field name="localhost:/home/simoncor/BlochCages/simulations/data/grids/Mo_5.0bar_density_grid.cube" type="string">Cube_1.0</Field>
-                <Field name="localhost:/home/simoncor/BlochCages/simulations/data/grids/Mo_65.0bar_density_grid.cube" type="string">Cube_1.0</Field>
+                <Field name="localhost:/home/cokes/BlochCages/simulations/Co.vtk" type="string">VTK_1.0</Field>
+                <Field name="localhost:/home/cokes/BlochCages/simulations/Co.xyz" type="string">XYZ_1.0</Field>
+                <Field name="localhost:/home/cokes/BlochCages/simulations/Mo.vtk" type="string">VTK_1.0</Field>
+                <Field name="localhost:/home/cokes/BlochCages/simulations/Mo.xyz" type="string">XYZ_1.0</Field>
+                <Field name="localhost:/home/cokes/BlochCages/simulations/data/crystals/Mo_cage_only.xyz" type="string">XYZ_1.0</Field>
+                <Field name="localhost:/home/cokes/BlochCages/simulations/data/grids/Mo_1.0bar_density_grid.cube" type="string">Cube_1.0</Field>
+                <Field name="localhost:/home/cokes/BlochCages/simulations/data/grids/Mo_35.0bar_density_grid.cube" type="string">Cube_1.0</Field>
+                <Field name="localhost:/home/cokes/BlochCages/simulations/data/grids/Mo_5.0bar_density_grid.cube" type="string">Cube_1.0</Field>
+                <Field name="localhost:/home/cokes/BlochCages/simulations/data/grids/Mo_65.0bar_density_grid.cube" type="string">Cube_1.0</Field>
             </Object>
             <Object name="DatabaseCorrelationList">
                 <Field name="needPermission" type="bool">true</Field>
@@ -5486,7 +5486,7 @@
                 <Object name="MachineProfile">
                     <Field name="hostNickname" type="string"></Field>
                     <Field name="host" type="string">trolltunga</Field>
-                    <Field name="userName" type="string">simoncor</Field>
+                    <Field name="userName" type="string">cokes</Field>
                     <Field name="hostAliases" type="string"></Field>
                     <Field name="directory" type="string"></Field>
                     <Field name="shareOneBatchJob" type="bool">false</Field>
