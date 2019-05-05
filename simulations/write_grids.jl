@@ -1,4 +1,4 @@
-using PorousMaterials, JLD2, Printf
+using PorousMaterials, JLD2, Printf, LinearAlgebra, Statistics
 
 xtals = Dict("Co" => "Co24_P1_cleaned_missingCo_added.cif", 
              "Mo" => "Mo24_P1.cif")
@@ -6,7 +6,7 @@ xtals = Dict("Co" => "Co24_P1_cleaned_missingCo_added.cif",
 ljff = LJForceField("Dreiding_UFF_for_Co_and_Mo.csv")
 molecule = Molecule("CH4")
 
-for metal in ["Co", "Mo"]
+for metal in ["Mo", "Co"]
     framework = Framework(xtals[metal])
     strip_numbers_from_atom_labels!(framework)
 
@@ -24,6 +24,29 @@ density_grid_jlds = Dict("Co" => "Co24_P1_cleaned_missingCo_added_Dreiding_200Kc
 
 pressures = [1.0, 5.0, 35.0, 65.0]
 
+function write_zeroed_out_grid(grid::Grid, savename::String)
+    framework = Framework(xtals["Mo"])
+    atoms, x = read_xyz("data/crystals/Mo_cage_only.xyz")
+    x_center = mean(x, dims=2)
+    x = x .- x_center
+    cage_radius = maximum([norm(x[:, i]) for i = 1:length(atoms)])
+
+    for i = 1:grid.n_pts[1]
+        for j = 1:grid.n_pts[2]
+            for k = 1:grid.n_pts[3]
+                r = norm(framework.box.f_to_c * (id_to_xf((i, j, k), grid.n_pts) .- 
+                    [0.5, 0.5, 0.5]))
+                if r > cage_radius
+                    grid.data[i, j, k] = 0.0
+                end
+            end
+        end
+    end
+        
+    write_cube(grid, savename * "_zeroed.cube")
+    return
+end
+
 for metal in ["Co", "Mo"]
     printstyled(metal * ":\n"; color=:yellow)
 
@@ -37,8 +60,15 @@ for metal in ["Co", "Mo"]
         @printf("\t⟨N⟩(%.1f bar)=%.3f, sum of grid = %.3f\n",
             pressures[i_p], res["⟨N⟩ (molecules)"], 
             sum(density_grid.data))
+        @printf("\tmax: %f min: %f\n", maximum(density_grid.data), minimum(density_grid.data))
 
-        write_cube(density_grid, @sprintf("%s_%.1fbar_density_grid.cube",
-            metal, pressures[i_p]))
+        cubefilename = @sprintf("%s_%.1fbar_density_grid", metal, pressures[i_p])
+
+        write_cube(density_grid, cubefilename * ".cube")
+        
+        # zero out density exterior to cage 
+        if metal == "Mo"
+            write_zeroed_out_grid(density_grid, cubefilename)
+        end
     end
 end
