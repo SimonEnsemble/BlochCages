@@ -13,7 +13,7 @@ for metal in ["Mo", "Co"]
     write_vtk(framework.box, metal)
     write_xyz(framework, metal * ".xyz")
 
-    n_pts = required_n_pts(framework.box, 0.25)
+    n_pts = required_n_pts(framework.box, 0.1)
     grid = energy_grid(framework, molecule, ljff, n_pts=n_pts)
     write_cube(grid, metal * "_energy_grid.cube")
 end
@@ -24,9 +24,9 @@ density_grid_jlds = Dict("Co" => "Co24_P1_cleaned_missingCo_added_Dreiding_200Kc
 
 pressures = [1.0, 5.0, 35.0, 65.0]
 
-function write_zeroed_out_grid(grid::Grid, savename::String)
-    framework = Framework(xtals["Mo"])
-    atoms, x = read_xyz("data/crystals/Mo_cage_only.xyz")
+function write_zeroed_out_grid(grid::Grid, metal::String, savename::String)
+    framework = Framework(xtals[metal])
+    atoms, x = read_xyz(@sprintf("data/crystals/%s_cage_only.xyz", metal))
     x_center = mean(x, dims=2)
     x = x .- x_center
     cage_radius = maximum([norm(x[:, i]) for i = 1:length(atoms)])
@@ -67,8 +67,6 @@ for metal in ["Co", "Mo"]
         write_cube(density_grid, cubefilename * ".cube")
         
         # zero out density exterior to cage 
-        if metal == "Mo"
-            write_zeroed_out_grid(density_grid, cubefilename)
-        end
+        write_zeroed_out_grid(density_grid, metal, cubefilename)
     end
 end
